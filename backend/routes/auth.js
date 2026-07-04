@@ -7,14 +7,14 @@ const User = require('../models/User');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // true for port 465 (SSL/TLS)
+  port: 587,
+  secure: false, // STARTTLS — port 587 works on Render/cloud (465 is blocked)
   auth: {
     user: process.env.SMTP_USER || process.env.EMAIL_USER,
     pass: process.env.SMTP_PASS || process.env.EMAIL_PASS
   },
   tls: {
-    rejectUnauthorized: false // avoids SSL handshake errors on cloud providers
+    rejectUnauthorized: false
   }
 });
 
@@ -72,12 +72,6 @@ const generateLoginId = async (name, companyName) => {
 router.post('/signup', async (req, res) => {
   const host = req.get('host');
   const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
-
-
-
-console.log("host :",host)
-console.log("protocol :",protocol)
-
 
   try {
     const { name, email, password, role, companyName, companyLogo } = req.body;
