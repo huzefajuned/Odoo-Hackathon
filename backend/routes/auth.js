@@ -73,13 +73,11 @@ router.post('/signup', async (req, res) => {
   const host = req.get('host');
   const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
 
-  console.log('\n--- [SIGNUP INITIALIZED] ---');
-  console.log('Incoming Payload:', {
-    name: req.body.name,
-    email: req.body.email,
-    role: req.body.role,
-    companyName: req.body.companyName
-  });
+
+
+console.log("host :",host)
+console.log("protocol :",protocol)
+
 
   try {
     const { name, email, password, role, companyName, companyLogo } = req.body;
@@ -156,6 +154,8 @@ router.post('/signup', async (req, res) => {
 
     console.log(`[SMTP]: Starting background email send to ${email}...`);
     transporter.sendMail(mailOptions)
+      .then(() => console.log(`[SMTP]: Email sent to ${email}`))
+      .catch(err => console.error('[SMTP ERROR]:', err.message));
     console.log('======================================================\n');
 
     res.status(201).json({
